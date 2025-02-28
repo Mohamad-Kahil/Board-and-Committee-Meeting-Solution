@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   LogOut,
   Users,
+  FileText,
 } from "lucide-react";
 
 interface NavItemProps {
@@ -152,7 +153,9 @@ const Sidebar = ({
         ? "meetings"
         : window.location.pathname === "/auth-user-management"
           ? "committee"
-          : "dashboard",
+          : window.location.pathname === "/agenda-management"
+            ? "agenda"
+            : "dashboard",
   );
 
   return (
@@ -241,6 +244,21 @@ const Sidebar = ({
 
               <Tooltip>
                 <TooltipTrigger asChild>
+                  <a href="/agenda-management">
+                    <Button
+                      variant={activeItem === "agenda" ? "secondary" : "ghost"}
+                      size="icon"
+                      className="w-10 h-10 mb-1"
+                    >
+                      <FileText className="h-5 w-5" />
+                    </Button>
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent side="right">Agenda Management</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
                   <Button
                     variant={activeItem === "realtime" ? "secondary" : "ghost"}
                     size="icon"
@@ -315,8 +333,13 @@ const Sidebar = ({
               icon={<Calendar className="h-5 w-5" />}
               label="Meeting Management"
               active={activeItem === "meetings"}
-              onClick={() => setActiveItem("meetings")}
               href="/meeting-scheduling"
+            />
+            <NavItem
+              icon={<FileText className="h-5 w-5" />}
+              label="Agenda Management"
+              active={activeItem === "agenda"}
+              href="/agenda-management"
             />
             <NavItem
               icon={<Video className="h-5 w-5" />}
@@ -334,7 +357,6 @@ const Sidebar = ({
               icon={<Users className="h-5 w-5" />}
               label="Committee Management"
               active={activeItem === "committee"}
-              onClick={() => setActiveItem("committee")}
               href="/auth-user-management"
             />
             <NavItem
