@@ -21,6 +21,7 @@ import {
   ChevronRight,
   ChevronLeft,
   LogOut,
+  Users,
 } from "lucide-react";
 
 interface NavItemProps {
@@ -28,6 +29,7 @@ interface NavItemProps {
   label: string;
   active?: boolean;
   onClick?: () => void;
+  href?: string;
 }
 
 const NavItem = ({
@@ -35,8 +37,28 @@ const NavItem = ({
   label,
   active = false,
   onClick = () => {},
+  href,
 }: NavItemProps) => {
-  return (
+  const content = (
+    <>
+      <span className="shrink-0">{icon}</span>
+      <span className="truncate">{label}</span>
+    </>
+  );
+
+  return href ? (
+    <a href={href}>
+      <Button
+        variant="ghost"
+        className={cn(
+          "w-full justify-start gap-3 px-3 py-2 text-left",
+          active ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+        )}
+      >
+        {content}
+      </Button>
+    </a>
+  ) : (
     <Button
       variant="ghost"
       className={cn(
@@ -45,8 +67,7 @@ const NavItem = ({
       )}
       onClick={onClick}
     >
-      <span className="shrink-0">{icon}</span>
-      <span className="truncate">{label}</span>
+      {content}
     </Button>
   );
 };
@@ -124,7 +145,15 @@ const Sidebar = ({
   collapsed = false,
   onToggleCollapse = () => {},
 }: SidebarProps) => {
-  const [activeItem, setActiveItem] = useState("dashboard");
+  const [activeItem, setActiveItem] = useState(
+    window.location.pathname === "/"
+      ? "dashboard"
+      : window.location.pathname === "/meeting-scheduling"
+        ? "meetings"
+        : window.location.pathname === "/auth-user-management"
+          ? "committee"
+          : "dashboard",
+  );
 
   return (
     <div
@@ -178,28 +207,34 @@ const Sidebar = ({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant={activeItem === "dashboard" ? "secondary" : "ghost"}
-                    size="icon"
-                    className="w-10 h-10 mb-1"
-                    onClick={() => setActiveItem("dashboard")}
-                  >
-                    <LayoutDashboard className="h-5 w-5" />
-                  </Button>
+                  <a href="/">
+                    <Button
+                      variant={
+                        activeItem === "dashboard" ? "secondary" : "ghost"
+                      }
+                      size="icon"
+                      className="w-10 h-10 mb-1"
+                    >
+                      <LayoutDashboard className="h-5 w-5" />
+                    </Button>
+                  </a>
                 </TooltipTrigger>
                 <TooltipContent side="right">Dashboard</TooltipContent>
               </Tooltip>
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant={activeItem === "meetings" ? "secondary" : "ghost"}
-                    size="icon"
-                    className="w-10 h-10 mb-1"
-                    onClick={() => setActiveItem("meetings")}
-                  >
-                    <Calendar className="h-5 w-5" />
-                  </Button>
+                  <a href="/meeting-scheduling">
+                    <Button
+                      variant={
+                        activeItem === "meetings" ? "secondary" : "ghost"
+                      }
+                      size="icon"
+                      className="w-10 h-10 mb-1"
+                    >
+                      <Calendar className="h-5 w-5" />
+                    </Button>
+                  </a>
                 </TooltipTrigger>
                 <TooltipContent side="right">Meeting Management</TooltipContent>
               </Tooltip>
@@ -236,6 +271,25 @@ const Sidebar = ({
 
               <Tooltip>
                 <TooltipTrigger asChild>
+                  <a href="/auth-user-management">
+                    <Button
+                      variant={
+                        activeItem === "committee" ? "secondary" : "ghost"
+                      }
+                      size="icon"
+                      className="w-10 h-10 mb-1"
+                    >
+                      <Users className="h-5 w-5" />
+                    </Button>
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  Committee Management
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
                   <Button
                     variant={activeItem === "settings" ? "secondary" : "ghost"}
                     size="icon"
@@ -255,13 +309,14 @@ const Sidebar = ({
               icon={<LayoutDashboard className="h-5 w-5" />}
               label="Dashboard"
               active={activeItem === "dashboard"}
-              onClick={() => setActiveItem("dashboard")}
+              href="/"
             />
             <NavItem
               icon={<Calendar className="h-5 w-5" />}
               label="Meeting Management"
               active={activeItem === "meetings"}
               onClick={() => setActiveItem("meetings")}
+              href="/meeting-scheduling"
             />
             <NavItem
               icon={<Video className="h-5 w-5" />}
@@ -274,6 +329,13 @@ const Sidebar = ({
               label="Analytics & Reporting"
               active={activeItem === "analytics"}
               onClick={() => setActiveItem("analytics")}
+            />
+            <NavItem
+              icon={<Users className="h-5 w-5" />}
+              label="Committee Management"
+              active={activeItem === "committee"}
+              onClick={() => setActiveItem("committee")}
+              href="/auth-user-management"
             />
             <NavItem
               icon={<Settings className="h-5 w-5" />}
