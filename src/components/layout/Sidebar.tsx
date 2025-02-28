@@ -153,21 +153,22 @@ const Sidebar = ({
             <span className="text-primary-foreground font-bold">BM</span>
           </div>
         )}
-        {!collapsed && (
-          <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-        )}
-        {collapsed && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-16 -right-3 h-6 w-6 rounded-full border border-border bg-background"
-            onClick={onToggleCollapse}
-          >
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleCollapse}
+          className={
+            collapsed
+              ? "absolute top-16 -right-3 h-6 w-6 rounded-full border border-border bg-background"
+              : ""
+          }
+        >
+          {collapsed ? (
             <ChevronRight className="h-4 w-4" />
-          </Button>
-        )}
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
+        </Button>
       </div>
 
       {/* Navigation */}
