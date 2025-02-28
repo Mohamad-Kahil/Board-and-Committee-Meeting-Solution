@@ -268,11 +268,15 @@ const AuthUserManagement = ({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [dir, setDir] = useState(isRTL ? "rtl" : "ltr");
 
+  // Force language update when component mounts
   useEffect(() => {
-    setDir(language === "ar" ? "rtl" : "ltr");
-  }, [language]);
+    // This will trigger the useEffect in useLanguage to apply RTL/LTR styles
+    const event = new Event("languagechange");
+    window.dispatchEvent(event);
+  }, []);
+
+  // This effect is no longer needed as RTL/LTR is handled by useLanguage
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -359,7 +363,7 @@ const AuthUserManagement = ({
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" dir={dir}>
+    <div className="flex h-screen overflow-hidden">
       <Sidebar collapsed={false} />
       <div className="flex-1 overflow-auto bg-gradient-to-br from-background to-background/80">
         <div className="container mx-auto py-8 px-4">

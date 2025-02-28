@@ -42,11 +42,9 @@ const AppShell = ({
     <div
       className={cn(
         "flex h-screen w-full overflow-hidden bg-background",
-        isRTL ? "rtl" : "ltr",
         isDarkMode ? "dark" : "",
         className,
       )}
-      dir={isRTL ? "rtl" : "ltr"}
     >
       {/* Sidebar */}
       <Sidebar collapsed={sidebarCollapsed} onToggleCollapse={toggleSidebar} />

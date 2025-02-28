@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +23,11 @@ import {
   LogOut,
   Users,
   FileText,
+  Globe,
+  Sun,
+  Moon,
 } from "lucide-react";
+import useLanguage from "@/lib/useLanguage";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -40,12 +44,19 @@ const NavItem = ({
   onClick = () => {},
   href,
 }: NavItemProps) => {
-  const content = (
-    <>
-      <span className="shrink-0">{icon}</span>
-      <span className="truncate">{label}</span>
-    </>
-  );
+  const { language } = useLanguage();
+  const content =
+    language === "ar" ? (
+      <>
+        <span className="shrink-0 ml-auto">{icon}</span>
+        <span className="truncate">{label}</span>
+      </>
+    ) : (
+      <>
+        <span className="shrink-0">{icon}</span>
+        <span className="truncate">{label}</span>
+      </>
+    );
 
   return href ? (
     <a href={href}>
@@ -146,6 +157,7 @@ const Sidebar = ({
   collapsed = false,
   onToggleCollapse = () => {},
 }: SidebarProps) => {
+  const { language, t, toggleLanguage } = useLanguage();
   const [activeItem, setActiveItem] = useState(
     window.location.pathname === "/"
       ? "dashboard"
@@ -157,6 +169,15 @@ const Sidebar = ({
             ? "agenda"
             : "dashboard",
   );
+
+  useEffect(() => {
+    // Update active item based on current path when component mounts or path changes
+    const path = window.location.pathname;
+    if (path === "/") setActiveItem("dashboard");
+    else if (path === "/meeting-scheduling") setActiveItem("meetings");
+    else if (path === "/auth-user-management") setActiveItem("committee");
+    else if (path === "/agenda-management") setActiveItem("agenda");
+  }, [window.location.pathname]);
 
   return (
     <div
@@ -175,14 +196,14 @@ const Sidebar = ({
         {!collapsed && (
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">BM</span>
+              <span className="text-primary-foreground font-bold">M</span>
             </div>
-            <span className="font-semibold">Meeting Manager</span>
+            <span className="font-semibold">MicroDigits Meetings</span>
           </div>
         )}
         {collapsed && (
           <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold">BM</span>
+            <span className="text-primary-foreground font-bold">M</span>
           </div>
         )}
         <Button
@@ -201,6 +222,76 @@ const Sidebar = ({
             <ChevronLeft className="h-4 w-4" />
           )}
         </Button>
+      </div>
+
+      {/* Language and Theme Toggle */}
+      <div className="px-4 py-2 border-b border-border">
+        {!collapsed && (
+          <div className="flex space-x-2 mb-2">
+            {/* Language Toggle */}
+            <Button
+              variant="outline"
+              className="flex-1 justify-start gap-2"
+              onClick={() => toggleLanguage()}
+            >
+              <Globe className="h-4 w-4" />
+              <span>{language === "ar" ? "English" : "العربية"}</span>
+            </Button>
+
+            {/* Theme Toggle */}
+            <Button
+              variant="outline"
+              className="flex-1 justify-start gap-2"
+              onClick={() => document.documentElement.classList.toggle("dark")}
+            >
+              <Sun className="h-4 w-4" />
+              <span>{language === "ar" ? "الوضع الداكن" : "Dark Mode"}</span>
+            </Button>
+          </div>
+        )}
+        {collapsed && (
+          <div className="space-y-2">
+            {/* Language Toggle */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="w-full"
+                    onClick={() => toggleLanguage()}
+                  >
+                    <Globe className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {language === "ar" ? "English" : "العربية"}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            {/* Theme Toggle */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="w-full"
+                    onClick={() =>
+                      document.documentElement.classList.toggle("dark")
+                    }
+                  >
+                    <Sun className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {language === "ar" ? "الوضع الداكن" : "Dark Mode"}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
       </div>
 
       {/* Navigation */}
@@ -222,7 +313,9 @@ const Sidebar = ({
                     </Button>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent side="right">Dashboard</TooltipContent>
+                <TooltipContent side="right">
+                  {language === "ar" ? "لوحة التحكم" : "Dashboard"}
+                </TooltipContent>
               </Tooltip>
 
               <Tooltip>
@@ -239,7 +332,11 @@ const Sidebar = ({
                     </Button>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent side="right">Meeting Management</TooltipContent>
+                <TooltipContent side="right">
+                  {language === "ar"
+                    ? "إدارة الاجتماعات"
+                    : "Meeting Management"}
+                </TooltipContent>
               </Tooltip>
 
               <Tooltip>
@@ -254,7 +351,11 @@ const Sidebar = ({
                     </Button>
                   </a>
                 </TooltipTrigger>
-                <TooltipContent side="right">Agenda Management</TooltipContent>
+                <TooltipContent side="right">
+                  {language === "ar"
+                    ? "إدارة جدول الأعمال"
+                    : "Agenda Management"}
+                </TooltipContent>
               </Tooltip>
 
               <Tooltip>
@@ -268,7 +369,9 @@ const Sidebar = ({
                     <Video className="h-5 w-5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="right">Real-time Features</TooltipContent>
+                <TooltipContent side="right">
+                  {language === "ar" ? "الميزات الفورية" : "Real-time Features"}
+                </TooltipContent>
               </Tooltip>
 
               <Tooltip>
@@ -283,7 +386,9 @@ const Sidebar = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="right">
-                  Analytics & Reporting
+                  {language === "ar"
+                    ? "التحليلات والتقارير"
+                    : "Analytics & Reporting"}
                 </TooltipContent>
               </Tooltip>
 
@@ -302,7 +407,7 @@ const Sidebar = ({
                   </a>
                 </TooltipTrigger>
                 <TooltipContent side="right">
-                  Committee Management
+                  {language === "ar" ? "إدارة اللجان" : "Committee Management"}
                 </TooltipContent>
               </Tooltip>
 
@@ -317,7 +422,9 @@ const Sidebar = ({
                     <Settings className="h-5 w-5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="right">User Settings</TooltipContent>
+                <TooltipContent side="right">
+                  {language === "ar" ? "إعدادات المستخدم" : "User Settings"}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
@@ -325,43 +432,55 @@ const Sidebar = ({
           <div className="space-y-1 px-3">
             <NavItem
               icon={<LayoutDashboard className="h-5 w-5" />}
-              label="Dashboard"
+              label={language === "ar" ? "لوحة التحكم" : "Dashboard"}
               active={activeItem === "dashboard"}
               href="/"
             />
             <NavItem
               icon={<Calendar className="h-5 w-5" />}
-              label="Meeting Management"
+              label={
+                language === "ar" ? "إدارة الاجتماعات" : "Meeting Management"
+              }
               active={activeItem === "meetings"}
               href="/meeting-scheduling"
             />
             <NavItem
               icon={<FileText className="h-5 w-5" />}
-              label="Agenda Management"
+              label={
+                language === "ar" ? "إدارة جدول الأعمال" : "Agenda Management"
+              }
               active={activeItem === "agenda"}
               href="/agenda-management"
             />
             <NavItem
               icon={<Video className="h-5 w-5" />}
-              label="Real-time Features"
+              label={
+                language === "ar" ? "الميزات الفورية" : "Real-time Features"
+              }
               active={activeItem === "realtime"}
               onClick={() => setActiveItem("realtime")}
             />
             <NavItem
               icon={<BarChart3 className="h-5 w-5" />}
-              label="Analytics & Reporting"
+              label={
+                language === "ar"
+                  ? "التحليلات والتقارير"
+                  : "Analytics & Reporting"
+              }
               active={activeItem === "analytics"}
               onClick={() => setActiveItem("analytics")}
             />
             <NavItem
               icon={<Users className="h-5 w-5" />}
-              label="Committee Management"
+              label={
+                language === "ar" ? "إدارة اللجان" : "Committee Management"
+              }
               active={activeItem === "committee"}
               href="/auth-user-management"
             />
             <NavItem
               icon={<Settings className="h-5 w-5" />}
-              label="User Settings"
+              label={language === "ar" ? "إعدادات المستخدم" : "User Settings"}
               active={activeItem === "settings"}
               onClick={() => setActiveItem("settings")}
             />
@@ -371,10 +490,11 @@ const Sidebar = ({
 
       {/* Footer */}
       <div className="mt-auto border-t border-border p-4">
+        {/* Logout Button */}
         {!collapsed && (
           <Button variant="outline" className="w-full justify-start gap-2">
             <LogOut className="h-4 w-4" />
-            <span>Logout</span>
+            <span>{language === "ar" ? "تسجيل الخروج" : "Logout"}</span>
           </Button>
         )}
         {collapsed && (
@@ -385,7 +505,9 @@ const Sidebar = ({
                   <LogOut className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="right">Logout</TooltipContent>
+              <TooltipContent side="right">
+                {language === "ar" ? "تسجيل الخروج" : "Logout"}
+              </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}

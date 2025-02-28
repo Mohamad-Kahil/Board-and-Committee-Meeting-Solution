@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import AppShell from "./layout/AppShell";
 import DashboardContent from "./dashboard/DashboardContent";
 import LoginForm from "./auth/LoginForm";
 import MFAVerification from "./auth/MFAVerification";
+import useLanguage from "@/lib/useLanguage";
 
 const Home = () => {
+  const { language } = useLanguage();
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to true to show dashboard by default
   const [showMFA, setShowMFA] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Force language update when component mounts
+  useEffect(() => {
+    // This will trigger the useEffect in useLanguage to apply RTL/LTR styles
+    const event = new Event("languagechange");
+    window.dispatchEvent(event);
+  }, []);
 
   // Animation variants
   const pageVariants = {

@@ -1084,12 +1084,16 @@ const MeetingScheduling = ({
   const [selectedMeeting, setSelectedMeeting] = useState<
     (typeof mockMeetings)[0] | null
   >(null);
-  const [dir, setDir] = useState(isRTL ? "rtl" : "ltr");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // Force language update when component mounts
   useEffect(() => {
-    setDir(language === "ar" ? "rtl" : "ltr");
-  }, [language]);
+    // This will trigger the useEffect in useLanguage to apply RTL/LTR styles
+    const event = new Event("languagechange");
+    window.dispatchEvent(event);
+  }, []);
+
+  // This effect is no longer needed as RTL/LTR is handled by useLanguage
 
   const handleCreateMeeting = (meeting: any) => {
     if (selectedMeeting) {
@@ -1138,7 +1142,7 @@ const MeetingScheduling = ({
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" dir={dir}>
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}

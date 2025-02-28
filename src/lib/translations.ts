@@ -204,10 +204,10 @@ export const translations: Translations = {
     pendingApprovals: "الموافقات المعلقة",
     recentActivities: "الأنشطة الأخيرة",
     language: "اللغة",
-    english: "English",
+    english: "الإنجليزية",
     arabic: "العربية",
     switchToArabic: "التبديل إلى العربية",
-    switchToEnglish: "Switch to English",
+    switchToEnglish: "التبديل إلى الإنجليزية",
 
     // Meeting related translations
     schedule: "جدولة",

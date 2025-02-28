@@ -1444,12 +1444,16 @@ const AgendaManagement = ({ isRTL = false }: AgendaManagementProps) => {
   const [selectedAgenda, setSelectedAgenda] = useState<
     (typeof mockAgendas)[0] | null
   >(null);
-  const [dir, setDir] = useState(isRTL ? "rtl" : "ltr");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // Force language update when component mounts
   useEffect(() => {
-    setDir(language === "ar" ? "rtl" : "ltr");
-  }, [language]);
+    // This will trigger the useEffect in useLanguage to apply RTL/LTR styles
+    const event = new Event("languagechange");
+    window.dispatchEvent(event);
+  }, []);
+
+  // This effect is no longer needed as RTL/LTR is handled by useLanguage
 
   const handleCreateAgenda = (agenda: any) => {
     if (selectedAgenda) {
@@ -1497,7 +1501,7 @@ const AgendaManagement = ({ isRTL = false }: AgendaManagementProps) => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden" dir={dir}>
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}

@@ -26,6 +26,7 @@ import {
   User,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import useLanguage from "@/lib/useLanguage";
 
 interface HeaderProps {
   isDarkMode?: boolean;
@@ -48,16 +49,13 @@ const Header = ({
   onLanguageToggle = () => {},
   onLogout = () => {},
 }: HeaderProps) => {
-  const [localDarkMode, setLocalDarkMode] = useState(isDarkMode);
-  const [localRTL, setLocalRTL] = useState(isRTL);
+  const { language, t } = useLanguage();
 
   const handleThemeToggle = () => {
-    setLocalDarkMode(!localDarkMode);
     onThemeToggle();
   };
 
   const handleLanguageToggle = () => {
-    setLocalRTL(!localRTL);
     onLanguageToggle();
   };
 
@@ -66,47 +64,27 @@ const Header = ({
       <div className="flex-1"></div>
 
       <div className="flex items-center space-x-4">
-        {/* Language Toggle */}
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center space-x-2">
-                <Globe className="h-5 w-5 text-muted-foreground" />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLanguageToggle}
-                >
-                  {localRTL ? "العربية" : "English"}
-                  <ChevronDown className="ml-1 h-4 w-4" />
-                </Button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{localRTL ? "Switch to English" : "التبديل إلى العربية"}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
         {/* Theme Toggle */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-center space-x-2">
-                {localDarkMode ? (
+                {isDarkMode ? (
                   <Moon className="h-5 w-5 text-muted-foreground" />
                 ) : (
                   <Sun className="h-5 w-5 text-muted-foreground" />
                 )}
                 <Switch
-                  checked={localDarkMode}
+                  checked={isDarkMode}
                   onCheckedChange={handleThemeToggle}
                 />
               </div>
             </TooltipTrigger>
             <TooltipContent>
               <p>
-                {localDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                {isDarkMode
+                  ? "التبديل إلى الوضع الفاتح"
+                  : "التبديل إلى الوضع الداكن"}
               </p>
             </TooltipContent>
           </Tooltip>
@@ -130,7 +108,11 @@ const Header = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>You have {notificationCount} notifications</p>
+              <p>
+                {language === "ar"
+                  ? `لديك ${notificationCount} إشعارات`
+                  : `You have ${notificationCount} notifications`}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -151,20 +133,22 @@ const Header = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {language === "ar" ? "حسابي" : "My Account"}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span>{language === "ar" ? "الملف الشخصي" : "Profile"}</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
+              <span>{language === "ar" ? "الإعدادات" : "Settings"}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>
               <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+              <span>{language === "ar" ? "تسجيل الخروج" : "Log out"}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
