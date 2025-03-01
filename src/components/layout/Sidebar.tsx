@@ -333,9 +333,28 @@ const Sidebar = ({
                   </a>
                 </TooltipTrigger>
                 <TooltipContent side="right">
-                  {language === "ar"
-                    ? "إدارة الاجتماعات"
-                    : "Meeting Management"}
+                  {language === "ar" ? "التقويم" : "Calendar"}
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a href="/meeting-dashboard">
+                    <Button
+                      variant={
+                        activeItem === "meetingDashboard"
+                          ? "secondary"
+                          : "ghost"
+                      }
+                      size="icon"
+                      className="w-10 h-10 mb-1"
+                    >
+                      <Users className="h-5 w-5" />
+                    </Button>
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  {language === "ar" ? "لوحة الاجتماعات" : "Meeting Dashboard"}
                 </TooltipContent>
               </Tooltip>
 
@@ -438,11 +457,17 @@ const Sidebar = ({
             />
             <NavItem
               icon={<Calendar className="h-5 w-5" />}
-              label={
-                language === "ar" ? "إدارة الاجتماعات" : "Meeting Management"
-              }
+              label={language === "ar" ? "التقويم" : "Calendar"}
               active={activeItem === "meetings"}
               href="/meeting-scheduling"
+            />
+            <NavItem
+              icon={<Users className="h-5 w-5" />}
+              label={
+                language === "ar" ? "لوحة الاجتماعات" : "Meeting Dashboard"
+              }
+              active={activeItem === "meetingDashboard"}
+              href="/meeting-dashboard"
             />
             <NavItem
               icon={<FileText className="h-5 w-5" />}
