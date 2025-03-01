@@ -188,7 +188,7 @@ const BoardMeetingWizard: React.FC<BoardMeetingWizardProps> = ({
           />
         );
       default:
-        return null;
+        return <div>Invalid step</div>;
     }
   };
 
